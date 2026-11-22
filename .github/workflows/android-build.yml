@@ -27,7 +27,6 @@ jobs:
       - name: Extract ABHI AI project
         run: |
           unzip ABHI_AI_V2_complete_source.zip -d source
-          find source -maxdepth 3 -type f | head -50
 
       - name: Set up Java
         uses: actions/setup-java@v4
@@ -36,7 +35,13 @@ jobs:
           java-version: '17'
 
       - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
+        uses: android-actions/setup-android@v4
+        with:
+          accept-android-sdk-licenses: true
+          log-accepted-android-sdk-licenses: false
+
+      - name: Accept remaining SDK licenses
+        run: yes | sdkmanager --licenses
 
       - name: Install Android platform and build tools
         run: |
@@ -58,3 +63,4 @@ jobs:
           path: source/ABHI_AI_V1/android/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
           retention-days: 7
+
