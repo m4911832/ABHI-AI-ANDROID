@@ -25,6 +25,34 @@ jobs:
         run: unzip ABHI_AI_Groq_Ready_Source.zip -d source
         
       - name: Add ABHI AI logo
+            - name: Set ABHI AI as app icon
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          files = list(Path("source").rglob("AndroidManifest.xml"))
+          if not files:
+              raise SystemExit("AndroidManifest.xml not found")
+
+          p = files[0]
+          s = p.read_text()
+          match = re.search(r'<application\b[^>]*>', s, re.S)
+          if not match:
+              raise SystemExit("Application tag not found")
+
+          tag = match.group(0)
+          tag = re.sub(r'android:icon="[^"]+"',
+                       'android:icon="@drawable/abhi_ai_logo"', tag)
+          tag = re.sub(r'android:roundIcon="[^"]+"',
+                       'android:roundIcon="@drawable/abhi_ai_logo"', tag)
+
+          if 'android:icon=' not in tag:
+              tag = tag[:-1] + ' android:icon="@drawable/abhi_ai_logo">'
+          s = s[:match.start()] + tag + s[match.end():]
+          p.write_text(s)
+          print("ABHI AI app icon configured")
+          PY
         run: |
           mkdir -p source/ABHI_AI_V1/android/app/src/main/res/drawable
           curl -L "https://raw.githubusercontent.com/m4911832/ABHI-AI-ANDROID/main/file_000000009adc82118946f503cf8c98ff.png" -o source/ABHI_AI_V1/android/app/src/main/res/drawable/abhi_ai_logo.png
