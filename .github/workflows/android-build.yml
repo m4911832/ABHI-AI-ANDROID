@@ -23,6 +23,12 @@ jobs:
 
       - name: Extract Groq-ready source
         run: unzip ABHI_AI_Groq_Ready_Source.zip -d source
+        
+      - name: Add ABHI AI logo
+        run: |
+          mkdir -p source/ABHI_AI_V1/android/app/src/main/res/drawable
+          curl -L "https://raw.githubusercontent.com/m4911832/ABHI-AI-ANDROID/main/file_000000009adc82118946f503cf8c98ff.png" -o source/ABHI_AI_V1/android/app/src/main/res/drawable/abhi_ai_logo.png
+
 
       - name: Configure Render backend URL
         run: |
