@@ -23,8 +23,8 @@ jobs:
 
       - name: Extract Groq-ready source
         run: unzip ABHI_AI_Groq_Ready_Source.zip -d source
-        
-      - name:      - name: Add ABHI AI logo
+
+      - name: Add ABHI AI logo
         run: |
           mkdir -p source/ABHI_AI_V1/android/app/src/main/res/drawable
           curl -fL "https://raw.githubusercontent.com/m4911832/ABHI-AI-ANDROID/main/file_000000009adc82118946f503cf8c98ff.png" -o source/ABHI_AI_V1/android/app/src/main/res/drawable/abhi_ai_logo.png
@@ -47,10 +47,6 @@ jobs:
           p.write_text(s)
           print("ABHI AI app icon configured")
           PY
-        run: |
-          mkdir -p source/ABHI_AI_V1/android/app/src/main/res/drawable
-          curl -L "https://raw.githubusercontent.com/m4911832/ABHI-AI-ANDROID/main/file_000000009adc82118946f503cf8c98ff.png" -o source/ABHI_AI_V1/android/app/src/main/res/drawable/abhi_ai_logo.png
-
 
       - name: Configure Render backend URL
         run: |
@@ -69,7 +65,6 @@ jobs:
               print("Render URL already configured")
           else:
               raise SystemExit("Backend URL pattern not found")
-
           PY
 
       - name: Set up Java
@@ -105,6 +100,3 @@ jobs:
           path: source/ABHI_AI_V1/android/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
           retention-days: 7
-
-
-
