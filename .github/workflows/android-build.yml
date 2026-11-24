@@ -24,6 +24,26 @@ jobs:
       - name: Extract Groq-ready source
         run: unzip ABHI_AI_Groq_Ready_Source.zip -d source
 
+      - name: Configure Render backend URL
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path("source/ABHI_AI_V1/android/app/build.gradle.kts")
+          if not p.exists():
+              raise SystemExit("Android build file not found")
+          s = p.read_text()
+          old = "http://10.0.2.2:8787"
+          new = "https://abhi-ai-android.onrender.com"
+          if old in s:
+              p.write_text(s.replace(old, new))
+              print("Backend URL updated")
+          elif new in s:
+              print("Render URL already configured")
+          else:
+              raise SystemExit("Backend URL pattern not found")
+
+          PY
+
       - name: Set up Java
         uses: actions/setup-java@v4
         with:
@@ -57,5 +77,6 @@ jobs:
           path: source/ABHI_AI_V1/android/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
           retention-days: 7
+
 
 
