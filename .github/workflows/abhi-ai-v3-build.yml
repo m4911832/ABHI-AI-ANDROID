@@ -1,0 +1,59 @@
+
+name: ABHI AI V3 Android APK
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'ABHI_AI_V3_GitHub_Ready.zip'
+      - '.github/workflows/abhi-ai-v3-build.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout V3 source archive
+        uses: actions/checkout@v4
+
+      - name: Extract V3 source
+        run: unzip ABHI_AI_V3_GitHub_Ready.zip -d source
+
+      - name: Verify backend URL
+        run: |
+          grep -q 'https://abhi-ai-v3-backend.onrender.com/' source/ABHI_AI_V3/android/app/build.gradle.kts
+          echo 'Backend URL verified'
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v4
+        with:
+          accept-android-sdk-licenses: true
+          log-accepted-android-sdk-licenses: false
+
+      - name: Install Android SDK 35
+        run: sdkmanager "platforms;android-35" "build-tools;35.0.0"
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.9'
+
+      - name: Build V3 debug APK
+        working-directory: source/ABHI_AI_V3/android
+        run: gradle :app:assembleDebug
+
+      - name: Upload V3 APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: ABHI-AI-V3-debug-APK
+          path: source/ABHI_AI_V3/android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+          retention-days: 7
