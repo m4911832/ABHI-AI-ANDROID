@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
   push:
     paths:
-      - 'ABHI_AI_V3_GitHub_Ready.zip'
+      - 'ABHI_AI_V3_source_NEW.zip'
       - '.github/workflows/abhi-ai-v3-build.yml'
 
 permissions:
@@ -14,12 +14,13 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout V3 source archive
         uses: actions/checkout@v4
 
       - name: Extract V3 source
-        run: unzip ABHI_AI_V3_GitHub_Ready.zip -d source
+        run: unzip ABHI_AI_V3_source_NEW.zip -d source
 
       - name: Verify backend URL
         run: |
